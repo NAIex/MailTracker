@@ -123,7 +123,7 @@ def open_emails_txt(mode = "r+"):
         email_file = open(emails_path, mode)
     except:
         email_file = open(emails_path,"x+")
-        email_file.writelines(datetime.date.today().strftime("%d-%b-%Y") + '\n')
+        email_file.writelines(datetime.date.today().strftime("%d-%b-%Y"))
         pass
     
     if mode == "w":
@@ -356,12 +356,18 @@ def module_modify_list():
         name = result[space_index+1:]
         match command:
             case "del":
-                name_start_index = data.find(name)
+                name_start_index = data.find(name) - 1
                 name_last_index = name_start_index + len(name) + 1
-                data = data[:name_start_index] + data[name_last_index:]
-                #print(mails_names_dictionary[name])
+                if data[name_start_index] == '\n' and (name_last_index == len(data) or data[name_last_index] == '\n'):
+                    data = data[:name_start_index] + data[name_last_index:]
+                else:
+                    print(f'Numele nu exista!')
+                
             case "add":
-                data += '\n'+name 
+                if name.find(".") != -1:
+                    data += '\n'+name 
+                else:
+                    print(f'Numele ar trebui sa fie in formatul prenume.nume!')
                 pass
 
         emails.close()
